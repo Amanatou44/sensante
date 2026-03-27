@@ -33,3 +33,8 @@ for diag, temp in temp_by_diag.items():
 print(f"\n{'=' * 50}")
 print("Exploration terminee !")
 print(f"{'=' * 50}")
+
+# ===== REPARTITION PAR SEXE ET DIAGNOSTIC =====
+print(f"\n--- Repartition par sexe et diagnostic ---")
+sexe_diag = df.groupby(["sexe", "diagnostic"]).size()
+print(sexe_diag)
