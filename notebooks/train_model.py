@@ -140,3 +140,31 @@ print(f"\n--- Résultat du pré-diagnostic ---")
 print(f"Patient : {nouveau_patient['sexe']}, {nouveau_patient['age']} ans")
 print(f"Diagnostic : {diagnostic}")
 print(f"Probabilité : {proba_max:.1%}")
+
+# Exercice 1 - Importance des features
+importances = model.feature_importances_
+print("\n--- Importance des features ---")
+for name, imp in sorted(zip(feature_cols, importances),
+                        key=lambda x: x[1], reverse=True):
+    print(f"{name:20s} : {imp:.3f}")
+
+    # Exercice 2 - 3 patients fictifs
+patients_test = [
+    {'age': 16, 'sexe': 'M', 'temperature': 36.8, 'tension_sys': 120,
+     'toux': False, 'fatigue': False, 'maux_tete': False, 'region': 'Dakar'},
+    {'age': 35, 'sexe': 'F', 'temperature': 40.2, 'tension_sys': 105,
+     'toux': False, 'fatigue': True, 'maux_tete': True, 'region': 'Thiès'},
+    {'age': 68, 'sexe': 'M', 'temperature': 38.9, 'tension_sys': 145,
+     'toux': True, 'fatigue': True, 'maux_tete': False, 'region': 'Saint-Louis'},
+]
+
+print("\n--- Exercice 2 : 3 patients fictifs ---")
+for i, p in enumerate(patients_test):
+    sexe_enc = le_sexe_loaded.transform([p['sexe']])[0]
+    region_enc = le_region_loaded.transform([p['region']])[0]
+    features = [p['age'], sexe_enc, p['temperature'], p['tension_sys'],
+                int(p['toux']), int(p['fatigue']), int(p['maux_tete']), region_enc]
+    diag = model_loaded.predict([features])[0]
+    proba = model_loaded.predict_proba([features])[0].max()
+    print(f"Patient {i+1} ({p['sexe']}, {p['age']} ans, {p['temperature']}°C) : {diag} ({proba:.1%})")
+    
