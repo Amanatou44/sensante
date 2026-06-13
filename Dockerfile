@@ -1,19 +1,17 @@
 # Dockerfile - SenSante
-# Image de base : Python 3.11 leger
 FROM python:3.11-slim
 
-# Dossier de travail dans le conteneur
 WORKDIR /app
 
-# Copier et installer les dependances d'abord
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir huggingface_hub hf_xet
 
-# Copier tout le code du projet
 COPY . .
 
-# Declarer le port
+# Telecharger les modeles depuis Hugging Face
+RUN python -c "from huggingface_hub import hf_hub_download; import os; os.makedirs('models', exist_ok=True); [hf_hub_download(repo_id='Amanatou444/sensante', filename='models/'+f, repo_type='space', local_dir='.') for f in ['model.pkl','encoder_sexe.pkl','encoder_region.pkl','feature_cols.pkl']]; print('Modeles telecharges !')"
+
 EXPOSE 8000
 
-# Commande de demarrage
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
