@@ -11,7 +11,7 @@ pinned: false
 Assistant pre-diagnostic medical pour le Senegal.
 
 ## Demo en ligne
-https://huggingface.co/spaces/Amanatou444/sensante
+https://huggingface.co/spaces/Amanatou444/sensante2
 
 ## Stack
 - scikit-learn (modele ML)

@@ -2,7 +2,6 @@
 *.pyc
 venv/
 .env
-models/*.pkl
 .DS_Store
 Thumbs.db
 .vscode/

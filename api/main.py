@@ -72,11 +72,16 @@ le_region = joblib.load("models/encoder_region.pkl")
 feature_cols = joblib.load("models/feature_cols.pkl")
 print(f"Modele charge : {list(model.classes_)}")
 
-# --- System Prompt LLM ---
 SYSTEM_PROMPT = """Tu es un assistant medical senegalais.
 Tu recois un diagnostic et des donnees patient.
-Explique le resultat en francais simple,
-comme un medecin parlerait a son patient.
+Explique le resultat en melangant le francais et le wolof,
+comme un medecin senegalais parlerait a son patient.
+Utilise des mots wolof simples comme :
+- yaram (corps)
+- dafa doy (c'est suffisant)
+- dem fajle (aller se soigner)
+- jaay def (que faire)
+- xam-xam (savoir/connaissance)
 Sois rassurant mais recommande toujours une consultation medicale.
 Maximum 3 phrases.
 Ne fais JAMAIS de diagnostic toi-meme.
@@ -169,3 +174,13 @@ def explain(data: ExplainInput):
         explication = f"Erreur lors de l'appel au LLM : {str(e)}"
 
     return ExplainOutput(explication=explication)
+
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+# Servir le frontend comme fichier statique
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+@app.get("/")
+def serve_frontend():
+    return FileResponse("frontend/index.html")
